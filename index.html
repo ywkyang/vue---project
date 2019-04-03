@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="warp">
+        {{massage}}
+        <p > 
+         {{massageone}}      
+        </p>
+        <div class="my-div" v-bind:title="mytitle">
+           dom赋值
+        </div>
+        <div class="" v-if="flag">
+           条件控制
+        </div>
+        <ul>
+            <li v-for = "(v , k) in list" >
+                 {{(v.value)}}
+
+                 {{(k +":"+v.value )}}
+            </li>
+        </ul> 
+       <!-- class 与 style :添加class -->
+       <div
+           class="my-add-class"
+           v-bind:class ="[activeClass , commitClass]" 
+       >
+       class和style 添加class
+       </div>
+
+       <div
+           v-bind:class = "{objectClass:flagclss}"
+       >
+           对象语法添加class
+       </div>
+      <!-- 事件驱动 -->
+      <!-- 事件监听   v-on 和 @ 作用一样 -->
+      <div
+          class=""
+          @click="headleMyfunctio"
+          @keyup = "headlekeyup"
+          @keydown = "headlekeydwon"
+      >
+           事件监听
+           <!-- 双向数据绑定 -->
+           <input type="text" v-model="inputValue">
+           <span>{{inputValue}}</span>
+
+           <div
+               @click ="headlestopmyfunction"
+           >
+            事件冒泡
+           </div>
+
+      </div>
+       <!-- 计算机属性 -->
+
+       <div class="computed-class">
+           {{resvermassage}}
+       </div>
+       <my-header
+         v-on:headle-children ="headleparent"
+        >
+    </my-header>
+
+    </div>
+</body>
+<script src="js/vue.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+
+//Vue 组件系统
+     Vue.component("my-header",{
+       name :"my-header",
+       template:`
+        <div class="my-header">
+            <div class="my-header-left">
+                 <a href="#" @click = "headleHeader">登录</a>
+                 <a href="#" @click ="$emit('headle-children',childrenMessage)" >
+                    注册
+                    </a>
+                
+            </div>
+            <div class="my-header-right">
+                 <a href="#" @click ="headlechildren" >我的</a>
+                 <a href="#">客服</a>
+            </div>
+            <div>
+            {{todo}}
+           </div>
+        </div>
+        
+       `,
+       data : function(){
+          return {
+               headleMessage :"我是head组件",
+               headlechildrenMessage :null,
+               childrenMessage :"子盒子"
+              }
+       },
+       methods:{
+          headleHeader : function(){
+            console.log()
+          },
+          headlechildren:function(){
+              this.headlechildrenMessage =this.todo;
+              this.headlechildrenMessage = this.headleMessage;
+              console.log(this.headlechildrenMessage)
+          }
+       },
+       computed:{
+
+       },
+    //    props:["todo","proMessage","proTitle"],
+    props : {
+           todo:{
+               type :String,
+               default :"我是一个默认值",
+           }
+        
+    }
+})
+//Vue实例化
+var vm =new Vue ({
+    el:"#warp",
+    data :function (){
+        
+       return  {
+           massage :"我是一个div",
+           massageone :"我是一个p标签",
+           mytitle : "我是title标签",
+           flag :false,
+           list :[
+               {id:1 ,value : "苹果"},
+               {id:2 ,value : "香蕉"},
+               {id:3 ,value : "桔子"},
+           ],
+           activeClass : "my-activeclass",
+           commitClass : "my-commitclass",
+           flagclss:true,
+           inputValue : "",
+         
+       }
+    },
+    methods:{
+        headleMyfunction: function (){
+            console.log(this.massage);
+            this.flag != false;
+            this.headleMyfunctio();
+            console.log("父盒子触发事件");
+        },
+        headleMyfunctio(){
+            this.massage = "欢迎使用vue";
+        },
+        headlekeyup :function(){
+            console.log("进入");
+        },
+        headlekeydwon :function (){
+            console.log("离开");
+        },
+        headlestopmyfunction :function(){
+            console.log("11111");
+        },
+        headleparent :function(e){
+            console.log(e,"在哪里")
+        }
+    },
+
+    //计算属性 ：computed 对象管理所有的计算属性
+    //计算属性是个方法，
+    computed:{
+        resvermassage:function(){
+            return  this.massage.split("").reverse().join("");
+        }
+    },
+    watch :{
+       flag :function(oldValue,newValue){
+          console.log(oldValue ,"旧值",newValue ,"新值")
+       }
+    }
+
+})
+</script> 
+
+</html>
